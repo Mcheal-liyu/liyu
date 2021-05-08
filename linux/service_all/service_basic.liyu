@@ -1,0 +1,19 @@
+
+
+服务状态：
+
+	service --status-all	# 查看所有服务
+
+	service {service_name} {start / stop / status}	# 服务设置/状态查看
+
+	systemctl {enable / disable} {service_name}	# 设置是否开机自启
+	
+	
+	
+	service_name:
+	
+		firewalld	：防火墙
+		
+		httpd/apache2	: apache 服务器
+		
+		

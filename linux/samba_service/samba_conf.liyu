@@ -1,0 +1,75 @@
+
+samba配置：
+
+目录：/etc/samba
+
+[share]
+
+path=/root/liyu/share
+public=yes
+writable=yes
+available=yes
+browseable=yes
+
+
+开启服务：
+service smbd start
+service nmbd start
+
+配置共享文件夹权限：
+
+chmod 777 share
+
+设置开机自启：
+
+systemctl enable smbd
+
+systemctl enable nmbd
+
+关闭开机自启：
+
+systemctl disable smbd
+
+systemctl disable nmbd
+
+
+查看服务状态：
+
+service smbd / nmbd status
+
+
+
+
+添加用户：
+
+smbpasswd -a username
+
+删除用户：
+
+smbpasswd -x username
+
+
+
+
+
+
+centOS8版本
+
+	sudo yum install samba
+	
+	systemctl status smb
+	
+	vim /etc/samba/smb.conf
+	
+
+
+[share]
+
+path=/root/liyu/share
+public=yes
+writable=yes
+available=yes
+browseable=yes
+
+
+

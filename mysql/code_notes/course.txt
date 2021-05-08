@@ -1,0 +1,33 @@
+CREATE TABLE student(
+son INT(15),
+sname VARCHAR(10),
+ssex char(1),
+sage TINYINT,
+sdept VARCHAR(5)
+);
+
+
+INSERT INTO student values
+(95001,'李勇','男',20,'CS'),
+(95002,'刘晨','女',19,'IS'),
+(95003,'王敏','女',18,'MA'),
+(95004,'张立','男',19,'IS'),
+(95005,'李章煜','男',19,'IS');
+
+
+
+ALTER TABLE student ADD PRIMATY KEY(son);
+
+CREATE TABLE dept(
+sdept CHAR(2),
+dept_name VARCHAR(20)
+);
+
+INSERT INTO dept values
+('CS','计算机科学与技术系'),
+('IS','电子信息工程'),
+('MA','数学系'),
+('AT','艺术系');
+
+
+SHOW COLUMNS FROM dept;

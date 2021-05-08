@@ -1,0 +1,38 @@
+
+
+
+basic:
+
+	df	# ¿¿¿¿¿
+
+	du	# ¿¿¿¿¿¿¿
+
+	fdisk	# ¿¿¿¿
+
+	mkfs	# ¿¿¿¿¿
+
+	fsck	# ¿¿¿¿
+
+	mount	# ¿¿¿¿/¿¿
+
+
+
+
+
+
+
+
+
+
+¿¿¿¿¿
+
+	fdisk -l		# ¿¿¿¿¿¿
+
+	fdisk {/dev/(xxx)}	# xxx¿¿¿¿
+
+	
+
+
+lvm:
+
+	

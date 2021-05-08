@@ -1,0 +1,10 @@
+
+centos8 stream 网络无法连接：
+
+	目录：	/etc/sysconfig/network-scripts
+	
+	ifcfg-xxx文件：
+
+	ONBOOT=no    -------alter----------ONBOOT=yes
+
+

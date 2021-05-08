@@ -1,0 +1,56 @@
+# 1-1 关联查询
+
+
+CREATE TABLE stu(
+u_id INT(10),
+u_name VARCHAR(15),
+u_sex CHAR(1),
+c_id INT(10)
+);
+
+INSERT INTO stu VALUES(100,'张三','男',111);
+INSERT INTO stu VALUES(100,'张三','男',112);
+INSERT INTO stu VALUES(100,'张三','男',113);
+INSERT INTO stu VALUES(101,'李四','女',113);
+INSERT INTO stu VALUES(101,'李四','女',114);
+
+
+CREATE TABLE course(
+u_id INT(10),
+c_name VARCHAR(15),
+price INT(10)
+);
+INSERT INTO course VALUES(111,'c语言',1);
+INSERT INTO course VALUES(112,'c++',2);
+INSERT INTO course VALUES(113,'数据结构与算法',3);
+INSERT INTO course VALUES(114,'TCP/UDP网络',2);
+
+# 1.1取交集
+SELECT s.u_name,c.c_name FROM stu s, course c WHERE s.u_id=100 AND s.c_id=c.c_id;
+
+SELECT s.u_name,c.c_name FROM stu s INNER JOIN course c ON s.u_id=100 AND s.c_id=c.c_id;
+# join 与inner join 等价 
+
+# 1.2 等值连接 s.c_id=c.c_id;  
+         非等值连接 s.c_id > c.c_id
+
+# 2.取左并集
+SELECT s.u_name,c.c_name FROM stu s LEFT JOIN course c ON s.u_id=100 AND s.c_id=c.c_id;
+# 右边没有匹配返回空
+
+# 3.取右并集
+SELECT s.u_name,c.c_name FROM stu s RIGHT JOIN course c ON s.u_id=100 AND s.c_id=c.c_id;
+# 左边没有匹配返回空
+
+# 4.联合查询UNION
+SELECT u_name FROM stu UNION SELECT c_name FROM course;
+# 查询结果集合并到一起
+
+
+
+
+
+
+
+
+

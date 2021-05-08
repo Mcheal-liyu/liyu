@@ -1,0 +1,11 @@
+
+#权限管理
+
+#1.用户创建
+   CREATE USER 'liyu'@'%' IDENTIFIED BY 'li123';
+
+#2.设置密码
+   SET PASSWORD FOR 'liyu'@'%' = PASSWORD('li123');
+
+#3.删除用户
+DROP USER 'liyu'@'%';

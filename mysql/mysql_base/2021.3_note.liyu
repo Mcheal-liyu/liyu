@@ -1,0 +1,472 @@
+MySQL 
+
+
+# 1.创建表：
+
+	CREATE TABLE user(
+	u_id INT(10),
+	u_name VARCHAR(15),
+	u_sex CHAR(2),
+	u_age TINYINT(3),
+	u_num CHAR(12)
+	
+	);
+
+# 2.插入：
+
+	INSERT INTO user VALUES(1314,'张三','男',13,'12345678901');
+	
+	# 插入中文报错修改my.ini 文件，
+	# ”default-character-set=gbk“ "character-set-server=gbk" 
+	
+	
+	
+# 3.查询：
+	
+	# 3.1
+	
+	SELECT *FROM user;	# 单表查询
+	
+	INSERT INTO table_name VALUES("this is table colunm");		
+	
+	INSERT INTO test VALUES(1,'xxx','xxx');
+	
+	# insert several values:
+	INSERT INTO test VALUES
+		(1,'xxx','xxx'),
+		(2,'xxx','xxx'),
+		(3,'xxx','xxx');
+	
+	INSERT INTO table_name SET column1=values1,column2=values2,column3=values3;
+	
+	
+	
+	# 3.2模糊查询	
+		
+	# IN查询u_age为10和20的行，ORDER BY 以u_id排序,  NOT IN() 查询为非
+		SELECT u_id,u_name,u_age FROM user WHERE u_age IN(10,20) ORDER BY u_id;		
+		
+	# 范围查询,u_age为12到100之间的行
+		SELECT u_id,u_name,u_age FROM user WHERE u_age BETWEEN 12 AND 100;
+		
+	# LIKE查询与通配符"%", "_"使用，"%"匹配任意长度字符。"_"匹配任意一个字符。
+		SELECT u_age, u_id,u_name,u_sex FROM user WHERE u_name LIKE'%四%';
+	
+	
+	# 3.3MySQL字段
+		1.修改字段
+		ALTER TABLE table_name CHANGE old_colunm new_colunm new_colunm_type;
+	
+		2.删除字段
+		ALTER TABLE table_name DROP colunm;
+		
+		3.增加字段
+		ALTER TABLE table_name ADD new_colunm new_colunm_type;
+		
+	
+	
+	
+	# 3.4关联查询(datapath:U:\liyu\mysql\code_notes\Association query.txt	&{# 1-1关联查询})
+	
+		交叉连接（CROSS JOIN）
+		内连接（INNER JOIN）
+		外连接（LEFT JOIN/RIGHT JOIN）
+		联合查询（UNION与UNION ALL）
+		全连接（FULL JOIN）
+		
+		# 1.1取交集
+			SELECT s.u_name,c.c_name FROM stu s, course c WHERE s.u_id=100 AND s.c_id=c.c_id;
+
+			SELECT s.u_name,c.c_name FROM stu s INNER JOIN course c ON s.u_id=100 AND s.c_id=c.c_id;
+		# join 与inner join 等价 
+
+		# 1.2 等值连接 s.c_id=c.c_id;  
+          非等值连接 s.c_id > c.c_id
+
+		# 2.取左并集
+			SELECT s.u_name,c.c_name FROM stu s LEFT JOIN course c ON s.u_id=100 AND s.c_id=c.c_id;
+		# 右边没有匹配返回空
+
+		# 3.取右并集
+			SELECT s.u_name,c.c_name FROM stu s RIGHT JOIN course c ON s.u_id=100 AND s.c_id=c.c_id;
+		# 左边没有匹配返回空
+
+		# 4.联合查询UNION
+			SELECT u_name FROM stu UNION SELECT c_name FROM course;
+		# 查询结果集合并到一起
+		# UNION ALL 不合并重复记录，UNION ALL效率高于 UNION 
+	
+	
+	# 3.5子查询
+		1.mysql查询子句 
+		 where(条件查询)、having（筛选）、group by（分组）、order by（排序）、limit（限制结果数）
+		
+		2.比较运算符
+		 >, <, =, !=, (< >), >=, <=  
+         in(value1,value2,...)  
+         between value1 and value2    在value1至value2之间（包含value1,value2）
+         
+		3.逻辑运算符
+			not ( ! )  逻辑非
+			or ( || )    逻辑或
+            and ( && )  逻辑与
+		
+		
+		4.=, IN, EXISTS,
+		 SELECT *FROM stu WHERE c_id=(SELECT MAX(c_id) FROM course);
+		 # =等效IN(两使用语法略有不同)
+		 SELECT *FROM stu WHERE c_id IN(SELECT MAX(c_id) FROM course);
+		 
+		 
+		 # EXISTS适合于外表小而子查询表大
+		 SELECT *FROM tiny_table1 t1 WHERE EXISTS(SELECT *FROM big_table2 WHERE id=t1.u_id );
+		 
+		 # IN适合于外表大而子查询表小
+		 SELECT *FROM big_table1 t1 WHERE t1.id IN(SELECT id FROM tiny_table2 WHERE id=t1.u_id );
+	
+		 # NOT IN 全表扫描不用索引，NOT EXISTS可用索引，比前者快
+	
+	
+	
+# 4.索引
+	
+	# 4.1 create index:
+
+	#创建表添加索引
+	# 添加普通普通索引
+	CREATE INDEX index_name ON table_name(column);	# This is common index
+	
+	# 修改表创建添加索引
+	ALTER TABLE table_name ADD INDEX index_name(column); 
+	
+	
+
+	#主键索引(不重复，不为空)
+	ALTER TABLE table_name ADD PRIMARY KEY(column);
+	
+	#唯一索引(不重复，允许一个为空)
+	ALTER TABLE table_name ADD UNIQUE index_name(column);
+	
+	#全文索引
+	ALTER TABLE table_name ADD FULLTEXT INDEX index_name(column);
+	
+	
+	#4.2组合索引
+	CREATE UNIQUE INDEX index_name ON table_name(column1,column2);
+	
+	
+	
+	
+	# 4.3 delete index:
+	DROP INDEX index_name ON table_name;	# direct delete index
+	
+	
+# 5。
+	
+	#5.1DROP, DELETE, TRUNCATE
+	
+	 1.DROP:属于数据库DDL定义语言，不走事务，不可回滚，删除表一切
+	
+	 2.TRUNCATE:属于数据库DDL定义语言，不走事务，原数据不放到 rollback segment 中，
+	   操作不触发 trigger
+	   
+	   清空表：TRUNCATE table_name;
+	 
+	 3.DELETE:属于数据库DML操作语言，只删除数据不删除表的结构，会走事务，执行时会触发trigger
+	   
+	   DELETE FROM table_name WHERE column=value1;
+	
+	
+	#5.2排序
+	#将数据从硬盘分批读取到内存使用内部排序，最后合并排序结果
+	ORDER BY
+	
+	#5.3索引算法种类
+	
+	BTree算法，Hash算法，全文索引
+	
+	#5.4创建索引原则
+	1.	 最左前缀匹配原则，组合索引非常重要的原则，mysql会一直向右匹、
+		 配直到遇到范围查询(>、<、between、like)就停止匹配，比如a = 1
+		 and b = 2 and c > 3 and d = 4 如果建立(a,b,c,d)顺序的索引，
+		 d是用不到索引的，如果建立(a,b,d,c)的索引则都可以用到，a,b,d的
+		 顺序可以任意调整。
+	
+	2.	较频繁作为查询条件的字段才去创建索引
+	
+	3.	更新频繁字段不适合创建索引
+	
+	4.	区分度低的列不适合做索引，如性别
+	
+	5.	尽量的扩展索引，不要新建索引。比如表中已经有a的索引，现在要加(a,b)的索引，
+		那么只需要修改原来的索引，升级为组合索引
+		
+	6.	定义有外键的数据列一定要建立索引
+
+	7.	对于定义为text、image和bit的数据类型的列不要建立索引
+	
+	
+	# 补充
+	8.	建立索引一般避免非空字段，NOT NULL
+	
+	9.	建立在取值离散大的字段
+	
+	10.	索引字段越小越好
+	
+	
+	
+	
+	#5.5外键
+		作用：保持数据一致性，完整性
+		# 外键建立
+		ALTER TABLE table1_name ADD FOREIGN KEY foreign_key(column) REFERENCES table_name(column);
+	
+	
+	
+	#5.6Hash索引
+		1. Hash索引效率比B树索引高，Hash检索一次定位，B树索引
+		从根节点到枝节点经历多次IO访问
+		
+		2. Hash索引仅支持"="，"IN"，"<=>",查询、
+		
+		3. Hash索引不支持排序，模糊查询
+		
+		4. Hash索引无法避免回表查询数据
+		
+		5. Hash索引当查询键值大量重复时，发生hash冲突，效率可能极低
+		
+		
+	
+	# 5.7回表
+		
+		1. 聚簇索引不需要回表
+	
+		2. 聚簇索引唯一且不为空，不同于普通索引。
+		   普通索引定位聚簇索引，再通过聚簇索引定位查询数据--->称为回表
+		
+		3. 索引覆盖-避免回表：
+		   将查询字段建立到联合索引中
+			
+		4. 非聚簇索引不一定需要回表
+		   非聚簇：根据字段是否全部命中了索引，如果全部命中了索引，那么就不必再进行回表查询
+		   
+	
+	# 5.8索引命中规则
+			
+		1. 最左匹配原则
+		
+		   先定位该sql的查询条件，有哪些，那些是等值的，那些是范围的条件。
+		   等值的条件去命中索引最左边的一个字段，然后依次从左往右命中，范围的放在最后。
+		
+		2. 聚集规则是：有主键则定义主键索引为聚集索引；没有主键则选第一个不允许为NULL的唯一索引；还没有就使用innodb的内置rowid为聚集索引。
+		
+		3. 索引不会被命中
+		   3.1 WHERE条件中有 OR 有索引也不会生效(innodb),(mylsam)可以使用
+		       除非条件字段都有索引(字段都有索引而不用索引，因为表太小了，用索引消耗比全表扫描大)
+			   
+			   #EXPLAIN SELECT *FROM table_name WHERE column1=value1 OR column2=value2 \G;
+			   
+		   
+		   3.2 
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+# 6.事务
+	
+	#6.1 脏读，幻读，不可重复读
+	    
+		1.脏读：一事务更新数据（未提交），另一事务读取数据。更新事务回滚，
+		  读取为脏数据
+		
+		2.不可重复读：两次查询中间进行了更新事务，导致数据不一致（更新操作）
+		
+		3.幻读：两次查询中间进行了插入事务，导致数据行数不一致（原数据一样，但是多了几行）
+		
+		
+		
+		READ-UNCOMMITTED(读取未提交)： 最低的隔离级别，允许读取尚未提交的数据变更，可能会
+		导致脏读、幻读或不可重复读。
+		
+		READ-COMMITTED(读取已提交)： 允许读取并发事务已经提交的数据，可以阻止脏读，但是
+		幻读或不可重复读仍有可能发生。
+		
+		REPEATABLE-READ(可重复读)： 对同一字段的多次读取结果都是一致的，除非数据是被本身事务
+		自己所修改，可以阻止脏读和不可重复读，但幻读仍有可能发生。
+		
+		SERIALIZABLE(可串行化)： 最高的隔离级别，完全服从ACID的隔离级别。所有的
+		事务依次逐个执行，这样事务之间就完全不可能产生干扰，也就是说，该级别可以
+		防止脏读、不可重复读以及幻读。
+	
+	# 6.2行级锁，表级锁，页级锁
+	     表级锁：开销小，加锁快；不会出现死锁；锁定粒度大，发生锁冲突的概率最高，并发度最低。(mylsam,innodb)
+
+		 行级锁：开销大，加锁慢；会出现死锁；锁定粒度最小，发生锁冲突的概率最低，并发度也最高。(innodb)
+				 (innodb基于索引完成行锁锁定。select * from name_index where id = 1 for update; 
+				 根据 for updata, id 为索引字段)
+		 
+		 
+		 页面锁：开销和加锁时间界于表锁和行锁之间；会出现死锁；锁定粒度界于表锁和行锁之间，并发度一般。
+	
+	
+	# 6.3 innodb储存引擎锁算法 
+		 (可重复读隔离级别下，阻止事务将纪录插入到同一范围，防止幻读)
+		 
+		 1.Record lock：单个行记录上的锁(记录锁，锁定索引记录，索引唯一使用)
+		 
+		 2.Gap lock：间隙锁，锁定一个范围，不包括记录本身(间隙锁，非唯一索引使用)
+		 
+		 3.Next-key lock：record+gap 锁定一个范围，包含记录本身
+		 
+	# 6.4 死锁——两个或多个事务相互占用同一资源，请求锁定对方资源，导致恶性循环现象
+		 死锁条件：
+		  1.一个资源每次只能被一个进程使用
+		  
+		  2.一个进程因请求资源而阻塞时，对已获得的资源保持不放
+		  
+		  3.进程已获得的资源，在末使用完之前，不能强行剥夺
+		  
+		  4.若干进程之间形成一种头尾相接的循环等待资源关系
+		 
+		 
+		 
+		 解决死锁
+		 1.升级锁粒度
+		 
+		 2.一个事务尽可能锁定所有所需有的资源
+		 
+	# 6.5乐观锁，悲观锁
+	
+		 悲观锁：资源每次只给一个线程使用，其它线程阻塞，用完后再把资源转让给其它线程
+		 (拿数据的时候都认为别人会修改，适用多写场景)
+		 
+		 
+		 乐观锁：资源多个线程使用
+		 (拿数据的时候都认为别人不会修改，适用多读场景)
+		 实现：(版本号机制或CAS算法)
+		 
+	# 6.6mysql触发器
+
+		 Before Insert
+		 After Insert
+		 Before Update
+		 After Update
+		 Before Delete
+		 After Delete
+		 
+	# 6.7主键，外键，候选键，超键
+		
+		 主键：唯一标识数据列或属性的组合。主键唯一，不为空。
+		 
+		 外键：一个表中存在另一个表的主键
+		 
+		 超键：唯一标识元组的属性集，一个属性或多个属性都可作为超键。超键包含候选键和主键。
+		 
+		 候选键：没有冗余的最小的超键。
+		 
+		 
+	# 6.8MySQL约束
+	
+		 NOT NULL: 控制字段不位空
+		 
+		 UNIQUE: 控制字段不可重复，允许一个为空，一个表可有多个UNIQUE约束
+		 
+		 PRIMARY KEY: 一个表只能有一个，不可重复，不可为空
+		 
+		 FOREIGN KEY: 加强两个表的一列或多列数据之间的连接，防止非法数据插入外键列
+		 
+		 CHECK: 控制字段值范围
+		 
+		 
+
+
+
+
+# 7.
+	
+	# 7.1类型
+		 # INT, CHAR, VARCHAR,
+		 INT(10) 10代表最大显示宽度为20，储存仍为4个字节(1个字节8个比特位，无符号0到2^32-1
+		 有符号-2^31-1到2^31-1)
+		 
+		 BIGINT(8个字节，64比特位，无符号0到2^64-1,有符号-2^63-1到2^63-1)
+		 
+		 MEDIUMINT(3个字节，24比特位，无符号0到2^24-1,有符号-2^23-1到2^23-1)
+		 
+		 SMALLINT(2个字节，16比特位，无符号0到2^16-1,有符号-2^15-1到2^15-1)
+		 
+		 TINYINT(1个字节，8比特位，无符号0到2^8-1,有符号-2^7-1到2^7-1)
+		 
+		 
+		 
+		 #CHAR 效率高于VARCHAR 
+		  
+		  CHAR(10)储存10个定长字符串，不足空格补齐，空格占位不算一字符
+		  VARCHAR(10)储存10个变长字符串，空格按一字符储存 
+		  
+		#FLOAT,DOUBLE
+		  
+		  FLOAT:内存占4字节，至多储存8位十进制数
+		  DOUBLE:内存占8字节，至多储存18位十进制数
+		  
+		  
+		  
+
+
+# 8.日志
+	
+	日志种类：
+		1.重做日志(redo log)
+		     保持事务持久性。记录事务执行后状态。发生故障，有脏页为写入磁盘。
+			 重启MySQL时根据redo log重做。
+			 
+			 (redo log)产生-释放：事务开始产生，事务执行写入，脏页写入磁盘释放。
+			 
+			 写入磁盘:不一定事务提交才刷入磁盘，还有重做日志缓存区(innodb_log_buffer)，大小默认8M
+				 三种方式刷入磁盘：
+				     1.Master Thread:每秒刷新一次
+					 2.每个事务提交时，刷新到重做日志文件中
+					 3.重做日志缓存空间少于一半，刷新到重做日志中
+			 
+		
+		2.回滚日志(undo log)
+			 保证数据原子性。用于回滚。提供多版本并发控制下的读(MVCC)，非锁定读
+			 
+			 (undo log)产生-释放：事务开始前将当前版本生成undo log，
+			  undo log也会产生redo log保证可靠性。
+			  事务提交undo log日志不能立即释放，要通过purge线程判断其他事务使用undo段中上一个
+			  事务之前的版本信息，决定是否释放日志
+			  
+			  
+		
+		3.二进制日志(binlog)
+			 用于复制。主从复制，主库(Master)中开启binlog，传递给从库(slaves)并回放实现数据一致
+			 
+			 (binlog)产生-释放：事务提交时产生(一次性将SQL语句按一定格式记录到binlog日志中)。
+			  binlog默认保存时间，由expire_logs_days配置决定，过后自动删除
+			 
+		
+		4.错误日志(errorlog)
+			 记录mysqld启动停止，以及运行时产生的错误信息。
+			  指定日志：
+				 1.编辑my.cnf写入log-error=[path]
+				 2.命令配置mysqld_safe-user=mysql -log-error=[path]
+		
+		5.慢查询日志(slow query log)
+			 记录执行超时查询语句
+			 
+			 默认关闭。
+		
+		6.一般查询日志(general log)
+			 记录服务器接受到所有查询命令，无论正确或语法正确。
+			 默认关闭。
+		
+		7.中继日志(relay log)
+			 从服务器I/O线程将主服务器的二进制日志读取过来记录到从服务器本地文件，
+			 然后从服务器SQL线程会读取relay-log日志的内容并应用到从服务器，从而使
+			 从服务器和主服务器的数据保持一致

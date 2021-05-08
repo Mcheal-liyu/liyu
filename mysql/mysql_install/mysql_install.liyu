@@ -1,0 +1,19 @@
+
+
+1.缺乏data文件
+在缺乏data文件时，一定注意不要手动创建data文件！！！手动创建data文件仍然会出现无法启动的情况。
+操作方式：
+（1）用管理员身份运行命令控制符（cmd）
+注意！！！此时如果不用管理员身份运行，可能会出现错误。
+（2）在cmd中输入
+
+mysqld --initialize --user=mysql --console
+
+
+2.管理员cmd窗口 进入mysql bin 目录
+
+执行：sc delete mysql
+
+执行：mysqld --install
+
+执行： net start mysql
